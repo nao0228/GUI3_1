@@ -132,8 +132,8 @@ void calcElapse(const SYSTEMTIME& begin, const SYSTEMTIME& end, SYSTEMTIME& elap
     int smm = begin.wMilliseconds;
 
     int ehm = end.wHour * 3600000;
-    int eminm = begin.wMinute * 60000;
-    int e
+    int eminm = end.wMinute * 60000;
+    int esm = end.wSecond * 1000;
 
 
 }
