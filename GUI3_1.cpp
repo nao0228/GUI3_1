@@ -1,4 +1,4 @@
-﻿// GUI3_1.cpp : アプリケーションのエントリ ポイントを定義します。
+// GUI3_1.cpp : アプリケーションのエントリ ポイントを定義します。
 //
 
 #include "framework.h"
@@ -11,7 +11,7 @@ SYSTEMTIME st; // 現在の時刻（global）
 void printTime(HDC hdc, int x, int y, const SYSTEMTIME& st) // 時間の表示
 {
     TCHAR str[64]; // 画面出力用文字列
-    wsprintf(str, TEXT("%02d:%02d:%02d:%02d"), st.wHour, st.wMinute, st.wSecond,st.wMilliseconds);
+    wsprintf(str, TEXT("%02d:%02d:%02d:%02d"), st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
     TextOut(hdc, x, y, str, lstrlen(str));
 }
 
@@ -19,9 +19,8 @@ void printTime(HDC hdc, int x, int y, const SYSTEMTIME& st) // 時間の表示
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
-int counter;
-SYSTEMTIME stStart, stStop;
-int alm;
+
+
 
 
 // このコード モジュールに含まれる関数の宣言を転送します:
@@ -31,9 +30,9 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -46,7 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // アプリケーション初期化の実行:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
@@ -65,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
 
@@ -81,17 +80,17 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GUI31));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_GUI31);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GUI31));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_GUI31);
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
@@ -108,35 +107,23 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
+    hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+    if (!hWnd)
+    {
+        return FALSE;
+    }
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
-   return TRUE;
+    return TRUE;
 }
 
-void calcElapse(const SYSTEMTIME& begin, const SYSTEMTIME& end, SYSTEMTIME& elapse) {
 
-    int  shm = begin.wHour * 3600000;
-    int sminm= begin.wMinute * 60000;
-    int ssm = begin.wSecond * 1000;
-    int smm = begin.wMilliseconds;
-
-    int ehm = end.wHour * 3600000;
-    int eminm = end.wMinute * 60000;
-    int esm = end.wSecond * 1000;
-
-
-}
 
 
 //
@@ -151,6 +138,8 @@ void calcElapse(const SYSTEMTIME& begin, const SYSTEMTIME& end, SYSTEMTIME& elap
 //
 
 int t = 10;
+int counter = 0;
+SYSTEMTIME stStart, stStop;
 
 std::ofstream output("result.csv");
 
@@ -159,26 +148,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        // 選択されたメニューの解析:
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam);
-            // 選択されたメニューの解析:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+            break;
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
         }
-        break;
+    }
+    break;
     case WM_CREATE:
         counter = 0;
-
+        GetLocalTime(&stStart);
         SetTimer(hWnd, TimerID, t, NULL); // 10m 秒ごとに WM_TIMER イベント発生するよう登録
+
         break;
     case WM_CLOSE:
         KillTimer(hWnd, TimerID); // 登録したタイマーの破棄
@@ -190,41 +180,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return DefWindowProc(hWnd, message, wParam, lParam); // メッセージをディスパッ
                    // TODO : ここにタイマーメッセージの処理を書く
 
-        if (counter == 0) {
-            GetLocalTime(&stStart);
-            InvalidateRect(hWnd, NULL, TRUE);
-        }
         if (counter == 100) {
+            GetLocalTime(&stStop);
+            KillTimer(hWnd, TimerID);
+            int h = stStop.wHour - stStart.wHour;
+            int min = stStop.wMinute - stStart.wMinute;
+            int s = stStop.wSecond - stStart.wSecond;
+            int mil = stStop.wMilliseconds - stStart.wMilliseconds;
+
+            int dt = h * 3600000 + min * 60000 + s * 1000 + mil;
+            output << t << "," << dt << std::endl;
             counter = 0;
             t++;
-            GetLocalTime(&stStop);
-            InvalidateRect(hWnd, NULL, TRUE);
-            KillTimer(hWnd, TimerID);
-            SetTimer(hWnd, TimerID, t, NULL);
-            output << alm;
-        }
-            if (t > 60) {
+            if (t <= 60) {
+                GetLocalTime(&stStart);
+                SetTimer(hWnd, TimerID, t, NULL);
+            }
+            else {
+                output.close();
                 KillTimer(hWnd, TimerID);
                 DestroyWindow(hWnd);
             }
-        counter++;
-
-        SetTimer(hWnd, TimerID, 10, NULL); // 10m 秒ごとに WM_TIMER イベント発生するよう登録
-            break;
-
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: HDC を使用する描画コードをここに追加してください...
-            
-            printTime(hdc, 100, 10, stStart);
-            printTime(hdc, 200, 10, stStop);
-            printTime(hdc,300,10,alm);
-
-            EndPaint(hWnd, &ps);
         }
         break;
+
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        // TODO: HDC を使用する描画コードをここに追加してください...
+
+        printTime(hdc, 100, 10, stStart);
+        printTime(hdc, 200, 10, stStop);
+
+
+        EndPaint(hWnd, &ps);
+    }
+    break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
